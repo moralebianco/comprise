@@ -2,6 +2,7 @@ import express from 'express'
 import { db } from './database.js'
 /* Use Cases */
 import { ItemUc } from './use-cases/item.js'
+import { PeopleUc } from './use-cases/people.js';
 
 export const app = express()
 
@@ -38,4 +39,37 @@ app.use(express.json())
   })
 
   app.use('/items', router)
+})()
+
+/* People API */
+;(() => {
+  const router = express.Router();
+  const people = new PeopleUc(db)
+
+  router.post('/', (req, res) => {
+    const { id, role, names, phone } = req.body
+    res.send(people.create({ id, role, names, phone }))
+  })
+
+  router.get('/:id', (req, res) => {
+    const { id } = req.params
+    res.send(people.findOne(id))
+  })
+
+  router.get('/', (_, res) => {
+    res.send(people.findAll())
+  })
+
+  router.put('/:id', (req, res) => {
+    const { id } = req.params
+    const { role, names, phone } = req.body
+    res.send(people.update(id, { role, names, phone }))
+  })
+
+  router.delete('/:id', (req, res) => {
+    const { id } = req.params
+    res.send(people.delete(id))
+  })
+
+  app.use('/people', router)
 })()
