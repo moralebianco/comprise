@@ -3,6 +3,7 @@ import { db } from './database.js'
 /* Use Cases */
 import { ItemUc } from './use-cases/item.js'
 import { PeopleUc } from './use-cases/people.js';
+import { SupplierUc } from './use-cases/supplier.js';
 
 export const app = express()
 
@@ -72,4 +73,37 @@ app.use(express.json())
   })
 
   app.use('/people', router)
+})()
+
+/* Supplier API */
+;(() => {
+  const router = express.Router();
+  const supplier = new SupplierUc(db)
+
+  router.post('/', (req, res) => {
+    const { id, name, phone, email } = req.body
+    res.send(supplier.create({ id, name, phone, email }))
+  })
+
+  router.get('/:id', (req, res) => {
+    const { id } = req.params
+    res.send(supplier.findOne(id))
+  })
+
+  router.get('/', (_, res) => {
+    res.send(supplier.findAll())
+  })
+
+  router.put('/:id', (req, res) => {
+    const { id } = req.params
+    const { name, phone, email } = req.body
+    res.send(supplier.update(id, { name, phone, email }))
+  })
+
+  router.delete('/:id', (req, res) => {
+    const { id } = req.params
+    res.send(supplier.delete(id))
+  })
+
+  app.use('/suppliers', router)
 })()
