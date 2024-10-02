@@ -1,9 +1,6 @@
 import express from 'express'
 import { db } from './database.js'
-/* Use Cases */
-import { ItemUc } from './use-cases/item.js'
-import { PeopleUc } from './use-cases/people.js';
-import { SupplierUc } from './use-cases/supplier.js';
+import { ItemUc, PeopleUc, SupplierUc } from './use-cases/index.js'
 
 export const app = express()
 
