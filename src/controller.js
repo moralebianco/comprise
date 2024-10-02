@@ -6,8 +6,7 @@ export const app = express()
 
 app.use(express.json())
 
-/* Items API */
-;(() => {
+;(() => {  // items
   const router = express.Router();
   const item = new ItemUc(db)
 
@@ -42,8 +41,7 @@ app.use(express.json())
   app.use('/items', router)
 })()
 
-/* People API */
-;(() => {
+;(() => { // people
   const router = express.Router();
   const people = new PeopleUc(db)
 
@@ -78,8 +76,7 @@ app.use(express.json())
   app.use('/people', router)
 })()
 
-/* Supplier API */
-;(() => {
+;(() => { // suppliers
   const router = express.Router();
   const supplier = new SupplierUc(db)
 
