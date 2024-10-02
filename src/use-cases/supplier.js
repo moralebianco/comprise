@@ -46,15 +46,8 @@ export class SupplierUc {
    * @returns {boolean}
    */
   update(id, { name, phone, email }) {
-    const stmt = this.db.prepare(`
-      INSERT INTO suppliers (id, name, phone, email) VALUES (?, ?, ?, ?)
-      ON CONFLICT (id) DO UPDATE SET
-        name=excluded.name,
-        phone=excluded.phone,
-        email=excluded.email
-      WHERE id=excluded.id
-    `)
-    return stmt.run(id, name, phone, email).changes > 0
+    const stmt = this.db.prepare('UPDATE suppliers SET name=?, phone=?, email=? WHERE id=?')
+    return stmt.run(name, phone, email, id).changes > 0
   }
 
   /**

@@ -46,15 +46,8 @@ export class PeopleUc {
    * @returns {boolean}
    */
   update(id, { role, names, phone }) {
-    const stmt = this.db.prepare(`
-      INSERT INTO people (id, role, names, phone) VALUES (?, ?, ?, ?)
-      ON CONFLICT (id) DO UPDATE SET
-        role=excluded.role,
-        names=excluded.names,
-        phone=excluded.phone
-      WHERE id=excluded.id
-    `)
-    return stmt.run(id, role, names, phone).changes > 0
+    const stmt = this.db.prepare('UPDATE people SET role=?, names=?, phone=? id=?')
+    return stmt.run(role, names, phone, id).changes > 0
   }
 
   /**

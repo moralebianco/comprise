@@ -46,16 +46,8 @@ export class ItemUc {
    * @returns {boolean}
    */
   update(id, { name, price, metadata, quantity }) {
-    const stmt = this.db.prepare(`
-      INSERT INTO items (rowid, name, price, metadata, quantity) VALUES (?, ?, ?, ?, ?)
-      ON CONFLICT (rowid) DO UPDATE SET
-        name=excluded.name,
-        price=excluded.price,
-        metadata=excluded.metadata,
-        quantity=excluded.quantity
-      WHERE rowid=excluded.rowid
-    `)
-    return stmt.run(id, name, price, metadata, quantity).changes > 0
+    const stmt = this.db.prepare('UPDATE items SET name=?, price=?, metadata=?, quantity=? WHERE id=?')
+    return stmt.run(name, price, metadata, quantity, id).changes > 0
   }
 
   /**

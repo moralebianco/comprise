@@ -31,7 +31,10 @@ app.use(express.json())
   router.put('/:id', (req, res) => {
     const { id } = req.params
     const { name, price, metadata, quantity } = req.body
-    res.send(item.update(parseInt(id), { name, price, metadata, quantity }))
+    if (item.findOne(parseInt(id)))
+      res.send(item.update(parseInt(id), { name, price, metadata, quantity }))
+    else
+      res.send(item.create({ name, price, metadata, quantity }))
   })
 
   router.delete('/:id', (req, res) => {
@@ -64,7 +67,10 @@ app.use(express.json())
   router.put('/:id', (req, res) => {
     const { id } = req.params
     const { role, names, phone } = req.body
-    res.send(people.update(id, { role, names, phone }))
+    if (people.findOne(id))
+      res.send(people.update(id, { role, names, phone }))
+    else
+      res.send(people.create({ id, role, names, phone }))
   })
 
   router.delete('/:id', (req, res) => {
@@ -97,7 +103,10 @@ app.use(express.json())
   router.put('/:id', (req, res) => {
     const { id } = req.params
     const { name, phone, email } = req.body
-    res.send(supplier.update(id, { name, phone, email }))
+    if (supplier.findOne(id))
+      res.send(supplier.update(id, { name, phone, email }))
+    else
+      res.send(supplier.create({ id, name, phone, email }))
   })
 
   router.delete('/:id', (req, res) => {
