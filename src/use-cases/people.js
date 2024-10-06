@@ -18,11 +18,11 @@ export class PeopleUc {
 
   /**
    * @param {People} people
-   * @returns {boolean} 
+   * @returns {string} 
    */
   create({ id, role, names, phone }) {
-    const stmt = this.db.prepare('INSERT INTO people VALUES (?, ?, ?, ?)')
-    return stmt.run(id, role, names, phone).changes > 0
+    const stmt = this.db.prepare('INSERT INTO people VALUES (?, ?, ?, ?) RETURNING id')
+    return stmt.get(id, role, names, phone).id
   }
 
   /** @returns {People[]} */

@@ -18,11 +18,11 @@ export class ItemUc {
 
   /**
    * @param {Item} item 
-   * @returns {boolean}
+   * @returns {number}
    */
   create({ name, price, metadata, quantity }) {
-    const stmt = this.db.prepare('INSERT INTO items VALUES (?, ?, ?, ?)')
-    return stmt.run(name, price, metadata, quantity).changes > 0
+    const stmt = this.db.prepare('INSERT INTO items VALUES (?, ?, ?, ?) RETURNING rowid')
+    return stmt.get(name, price, metadata, quantity).rowid
   }
 
   /** @returns {Item[]} */

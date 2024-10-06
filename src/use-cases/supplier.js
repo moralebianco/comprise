@@ -18,11 +18,11 @@ export class SupplierUc {
 
   /**
    * @param {Supplier} supplier
-   * @returns {boolean} 
+   * @returns {string} 
    */
   create({ id, name, phone, email }) {
-    const stmt = this.db.prepare('INSERT INTO suppliers VALUES (?, ?, ?, ?)')
-    return stmt.run(id, name, phone, email).changes > 0
+    const stmt = this.db.prepare('INSERT INTO suppliers VALUES (?, ?, ?, ?) RETURNING id')
+    return stmt.get(id, name, phone, email).id
   }
 
   /** @returns {Supplier[]} */
