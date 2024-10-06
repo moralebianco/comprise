@@ -1,3 +1,3 @@
-export { ItemUc } from './item'
-export { PeopleUc } from './people'
-export { SupplierUc } from './supplier'
+export { ItemUc } from './item.js'
+export { PeopleUc } from './people.js'
+export { SupplierUc } from './supplier.js'
