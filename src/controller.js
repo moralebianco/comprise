@@ -1,6 +1,6 @@
 import express from 'express'
 import { db } from './database.js'
-import { ItemUc, PeopleUc, SupplierUc } from './use-cases/index.js'
+import { ItemUc, PeopleUc, SupplierUc, SaleUc } from './use-cases/index.js'
 
 export const app = express()
 
@@ -109,4 +109,30 @@ app.use(express.json())
   })
 
   app.use('/suppliers', router)
+})()
+
+;(() => { // sales
+  const router = express.Router()
+  const uc = new SaleUc(db)
+
+  router.post('/', (req, res) => {
+    const { checkoutId, customerId } = req.body
+    res.send(uc.create({ checkoutId, customerId }))
+  })
+
+  router.get('/:id', (req, res) => {
+    const { id } = req.params
+    res.send(uc.findOne(parseInt(id)))
+  })
+
+  router.get('/', (_, res) => {
+    res.send(uc.findAll())
+  })
+
+  router.delete('/:id', (req, res) => {
+    const { id } = req.params
+    res.send(uc.delete(parseInt(id)))
+  })
+
+  app.use('/sales', router)
 })()
