@@ -125,8 +125,19 @@ app.use(express.json())
     res.send(uc.findOne(parseInt(id)))
   })
 
+  router.get('/:id/items', (req, res) => {
+    const { id } = req.params
+    res.send(uc.getItems(parseInt(id)))
+  })
+
   router.get('/', (_, res) => {
     res.send(uc.findAll())
+  })
+
+  router.put('/:id/items', (req, res) => {
+    const { id } = req.params
+    const { items } = req.body
+    res.send(uc.setItems(parseInt(id), items))
   })
 
   router.delete('/:id', (req, res) => {
