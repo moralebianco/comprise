@@ -4,4 +4,4 @@ app.get('/ping', (_, res) => {
   res.send('pong')
 })
 
-app.listen(3000)
+app.listen(process.env.APP_PORT)

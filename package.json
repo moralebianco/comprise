@@ -4,7 +4,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "node --experimental-sqlite --watch src/index.js"
+    "start": "node --experimental-sqlite --env-file=.env --watch src/index.js"
   },
   "keywords": [],
   "author": "Nelson Morales",
