@@ -32,7 +32,7 @@ app.use(express.json())
     if (uc.findOne(parseInt(id)))
       res.send(uc.update(parseInt(id), { name, price, metadata, quantity }))
     else
-      res.send(uc.create({ name, price, metadata, quantity }))
+      res.send(uc.create({ id: parseInt(id), name, price, metadata, quantity }))
   })
 
   router.delete('/:id', (req, res) => {

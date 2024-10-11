@@ -17,12 +17,13 @@ export class ItemUc {
   }
 
   /**
-   * @param {Item} item 
+   * @param {Item & { id?: number }} item 
    * @returns {number}
    */
-  create({ name, price, metadata, quantity }) {
-    const stmt = this.db.prepare('INSERT INTO items VALUES (?, ?, ?, ?) RETURNING rowid')
-    return stmt.get(name, price, metadata, quantity).rowid
+  create({ id, name, price, metadata, quantity }) {
+    const query = 'INSERT INTO items (rowid, name, price, metadata, quantity) VALUES (?, ?, ?, ?, ?) RETURNING rowid'
+    const stmt = this.db.prepare(query)
+    return stmt.get(id ?? null, name, price, metadata, quantity).rowid
   }
 
   /** @returns {Item[]} */
