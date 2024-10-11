@@ -1,4 +1,4 @@
-import { app } from './controller.js'
+import { app } from './controllers.js'
 
 app.get('/ping', (_, res) => {
   res.send('pong')
