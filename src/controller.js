@@ -13,13 +13,11 @@ app.use(express.json())
   const uc = new ItemUc(db)
 
   router.post('/', (req, res) => {
-    const { name, price, metadata, quantity } = req.body
-    res.send(uc.create({ name, price, metadata, quantity }))
+    res.send(uc.create(req.body))
   })
 
   router.get('/:id', (req, res) => {
-    const { id } = req.params
-    res.send(uc.findOne(parseInt(id)))
+    res.send(uc.findOne(parseInt(req.params.id)))
   })
 
   router.get('/', (_, res) => {
@@ -27,17 +25,14 @@ app.use(express.json())
   })
 
   router.put('/:id', (req, res) => {
-    const { id } = req.params
-    const { name, price, metadata, quantity } = req.body
-    if (uc.findOne(parseInt(id)))
-      res.send(uc.update(parseInt(id), { name, price, metadata, quantity }))
+    if (uc.findOne(parseInt(req.params.id)))
+      res.send(uc.update(parseInt(req.params.id), req.body))
     else
-      res.send(uc.create({ id: parseInt(id), name, price, metadata, quantity }))
+      res.send(uc.create(req.body))
   })
 
   router.delete('/:id', (req, res) => {
-    const { id } = req.params
-    res.send(uc.delete(parseInt(id)))
+    res.send(uc.delete(parseInt(req.params.id)))
   })
 
   app.use('/items', router)
@@ -48,18 +43,15 @@ app.use(express.json())
   const uc = new OrderUc(db)
 
   router.post('/', (req, res) => {
-    const { adminId, supplierId } = req.body
-    res.send(uc.create({ adminId, supplierId }))
+    res.send(uc.create(req.body))
   })
 
   router.get('/:id', (req, res) => {
-    const { id } = req.params
-    res.send(uc.findOne(parseInt(id)))
+    res.send(uc.findOne(parseInt(req.params.id)))
   })
 
   router.get('/:id/items', (req, res) => {
-    const { id } = req.params
-    res.send(uc.getItems(parseInt(id)))
+    res.send(uc.getItems(parseInt(req.params.id)))
   })
 
   router.get('/', (_, res) => {
@@ -67,14 +59,11 @@ app.use(express.json())
   })
 
   router.put('/:id/items', (req, res) => {
-    const { id } = req.params
-    const { items } = req.body
-    res.send(uc.setItems(parseInt(id), items))
+    res.send(uc.setItems(parseInt(req.params.id), req.body.items))
   })
 
   router.delete('/:id', (req, res) => {
-    const { id } = req.params
-    res.send(uc.delete(parseInt(id)))
+    res.send(uc.delete(parseInt(req.params.id)))
   })
 
   app.use('/orders', router)
@@ -85,13 +74,11 @@ app.use(express.json())
   const uc = new PeopleUc(db)
 
   router.post('/', (req, res) => {
-    const { id, role, names, phone } = req.body
-    res.send(uc.create({ id, role, names, phone }))
+    res.send(uc.create(req.body))
   })
 
   router.get('/:id', (req, res) => {
-    const { id } = req.params
-    res.send(uc.findOne(id))
+    res.send(uc.findOne(req.params.id))
   })
 
   router.get('/', (_, res) => {
@@ -99,17 +86,14 @@ app.use(express.json())
   })
 
   router.put('/:id', (req, res) => {
-    const { id } = req.params
-    const { role, names, phone } = req.body
-    if (uc.findOne(id))
-      res.send(uc.update(id, { role, names, phone }))
+    if (uc.findOne(req.params.id))
+      res.send(uc.update(req.params.id, req.body))
     else
-      res.send(uc.create({ id, role, names, phone }))
+      res.send(uc.create(req.body))
   })
 
   router.delete('/:id', (req, res) => {
-    const { id } = req.params
-    res.send(uc.delete(id))
+    res.send(uc.delete(req.params.id))
   })
 
   app.use('/people', router)
@@ -120,18 +104,15 @@ app.use(express.json())
   const uc = new SaleUc(db)
 
   router.post('/', (req, res) => {
-    const { checkoutId, customerId } = req.body
-    res.send(uc.create({ checkoutId, customerId }))
+    res.send(uc.create(req.body))
   })
 
   router.get('/:id', (req, res) => {
-    const { id } = req.params
-    res.send(uc.findOne(parseInt(id)))
+    res.send(uc.findOne(parseInt(req.params.id)))
   })
 
   router.get('/:id/items', (req, res) => {
-    const { id } = req.params
-    res.send(uc.getItems(parseInt(id)))
+    res.send(uc.getItems(parseInt(req.params.id)))
   })
 
   router.get('/', (_, res) => {
@@ -139,14 +120,11 @@ app.use(express.json())
   })
 
   router.put('/:id/items', (req, res) => {
-    const { id } = req.params
-    const { items } = req.body
-    res.send(uc.setItems(parseInt(id), items))
+    res.send(uc.setItems(parseInt(req.params.id), req.body.items))
   })
 
   router.delete('/:id', (req, res) => {
-    const { id } = req.params
-    res.send(uc.delete(parseInt(id)))
+    res.send(uc.delete(parseInt(req.params.id)))
   })
 
   app.use('/sales', router)
@@ -157,13 +135,11 @@ app.use(express.json())
   const uc = new SupplierUc(db)
 
   router.post('/', (req, res) => {
-    const { id, name, phone, email } = req.body
-    res.send(uc.create({ id, name, phone, email }))
+    res.send(uc.create(req.body))
   })
 
   router.get('/:id', (req, res) => {
-    const { id } = req.params
-    res.send(uc.findOne(id))
+    res.send(uc.findOne(req.params.id))
   })
 
   router.get('/', (_, res) => {
@@ -171,17 +147,14 @@ app.use(express.json())
   })
 
   router.put('/:id', (req, res) => {
-    const { id } = req.params
-    const { name, phone, email } = req.body
-    if (uc.findOne(id))
-      res.send(uc.update(id, { name, phone, email }))
+    if (uc.findOne(req.params.id))
+      res.send(uc.update(req.params.id, req.body))
     else
-      res.send(uc.create({ id, name, phone, email }))
+      res.send(uc.create(req.body))
   })
 
   router.delete('/:id', (req, res) => {
-    const { id } = req.params
-    res.send(uc.delete(id))
+    res.send(uc.delete(req.params.id))
   })
 
   app.use('/suppliers', router)
