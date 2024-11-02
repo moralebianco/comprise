@@ -7,17 +7,17 @@ import { DatabaseSync } from 'node:sqlite'
  *  name: string,
  *  phone: string,
  *  email: string
- * }} Supplier
+ * }} Supplier_
  */
 
-export class SupplierUc {
+export class Supplier {
   /** @param {DatabaseSync} db  */
   constructor(db) {
     this.db = db
   }
 
   /**
-   * @param {Supplier} supplier
+   * @param {Supplier_} supplier
    * @returns {string} 
    */
   create({ id, name, phone, email }) {
@@ -25,7 +25,7 @@ export class SupplierUc {
     return stmt.get(id, name, phone, email).id
   }
 
-  /** @returns {Supplier[]} */
+  /** @returns {Supplier_[]} */
   findAll() {
     const stmt = this.db.prepare('SELECT * FROM suppliers')
     return stmt.all()
@@ -33,7 +33,7 @@ export class SupplierUc {
 
   /** 
    * @param {string} id 
-   * @returns {Supplier | undefined}
+   * @returns {Supplier_ | undefined}
    */
   findOne(id) {
     const stmt = this.db.prepare('SELECT * FROM suppliers WHERE id=?')
@@ -42,7 +42,7 @@ export class SupplierUc {
 
   /**
    * @param {string} id
-   * @param {Omit<Supplier, "id">} supplier
+   * @param {Omit<Supplier_, "id">} supplier
    * @returns {boolean}
    */
   update(id, { name, phone, email }) {

@@ -7,17 +7,17 @@ import { DatabaseSync } from 'node:sqlite'
  *  role: number,
  *  names: string,
  *  phone: string
- * }} People
+ * }} People_
  */
 
-export class PeopleUc {
+export class People {
   /** @param {DatabaseSync} db  */
   constructor(db) {
     this.db = db
   }
 
   /**
-   * @param {People} people
+   * @param {People_} people
    * @returns {string} 
    */
   create({ id, role, names, phone }) {
@@ -25,7 +25,7 @@ export class PeopleUc {
     return stmt.get(id, role, names, phone).id
   }
 
-  /** @returns {People[]} */
+  /** @returns {People_[]} */
   findAll() {
     const stmt = this.db.prepare('SELECT * FROM people')
     return stmt.all()
@@ -33,7 +33,7 @@ export class PeopleUc {
 
   /** 
    * @param {string} id 
-   * @returns {People | undefined}
+   * @returns {People_ | undefined}
    */
   findOne(id) {
     const stmt = this.db.prepare('SELECT * FROM people WHERE id=?')
@@ -42,7 +42,7 @@ export class PeopleUc {
 
   /**
    * @param {string} id
-   * @param {Omit<People, "id">} people
+   * @param {Omit<People_, "id">} people
    * @returns {boolean}
    */
   update(id, { role, names, phone }) {

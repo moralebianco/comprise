@@ -8,7 +8,7 @@ import { clone, snakeToCamel } from '../util.js'
  *  supplierId: string,
  *  price: number,
  *  datetime: number
- * }} Order
+ * }} Order_
  * 
  * @typedef {{
  *  itemId: number,
@@ -17,14 +17,14 @@ import { clone, snakeToCamel } from '../util.js'
  * }} OrderItem
  */
 
-export class OrderUc {
+export class Order {
   /** @param {DatabaseSync} db  */
   constructor(db) {
     this.db = db
   }
 
   /**
-   * @param {Omit<Order, "price" | "datetime">} order 
+   * @param {Omit<Order_, "price" | "datetime">} order 
    * @returns 
    */
   create({ adminId, supplierId }) {
@@ -32,7 +32,7 @@ export class OrderUc {
     return stmt.get(adminId, supplierId, 0, Date.now()).rowid
   }
 
-  /** @returns {Order[]} */
+  /** @returns {Order_[]} */
   findAll() {
     const stmt = this.db.prepare('SELECT rowid, * FROM orders')
     return stmt.all().map(order => clone(order, snakeToCamel))
@@ -40,7 +40,7 @@ export class OrderUc {
 
   /**
    * @param {number} id 
-   * @returns {Order | undefined}
+   * @returns {Order_ | undefined}
    */
   findOne(id) {
     const stmt = this.db.prepare('SELECT rowid, * FROM orders WHERE rowid=?')

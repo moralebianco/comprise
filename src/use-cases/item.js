@@ -7,17 +7,17 @@ import { DatabaseSync } from 'node:sqlite'
  *  price: number,
  *  metadata: string,
  *  quantity: number
- * }} Item
+ * }} Item_
  */
 
-export class ItemUc {
+export class Item {
   /** @param {DatabaseSync} db  */
   constructor(db) {
     this.db = db
   }
 
   /**
-   * @param {Item & { id?: number }} item 
+   * @param {Item_ & { id?: number }} item 
    * @returns {number}
    */
   create({ id, name, price, metadata, quantity }) {
@@ -26,7 +26,7 @@ export class ItemUc {
     return stmt.get(id ?? null, name, price, metadata, quantity).rowid
   }
 
-  /** @returns {Item[]} */
+  /** @returns {Item_[]} */
   findAll() {
     const stmt = this.db.prepare('SELECT rowid, * FROM items')
     return stmt.all()
@@ -34,7 +34,7 @@ export class ItemUc {
 
   /** 
    * @param {number} id 
-   * @returns {Item | undefined}
+   * @returns {Item_ | undefined}
    */
   findOne(id) {
     const stmt = this.db.prepare('SELECT rowid, * FROM items WHERE rowid=?')
@@ -43,7 +43,7 @@ export class ItemUc {
 
   /**
    * @param {number} id
-   * @param {Item} item
+   * @param {Item_} item
    * @returns {boolean}
    */
   update(id, { name, price, metadata, quantity }) {
