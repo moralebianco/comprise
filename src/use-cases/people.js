@@ -4,7 +4,7 @@ import { DatabaseSync } from 'node:sqlite'
 /**
  * @typedef {{
  *  id: string,
- *  role: number,
+ *  roles: string[],
  *  names: string,
  *  phone: string
  * }} People_
@@ -20,9 +20,9 @@ export class People {
    * @param {People_} people
    * @returns {string} 
    */
-  create({ id, role, names, phone }) {
-    const stmt = this.db.prepare('INSERT INTO people VALUES (?, ?, ?, ?) RETURNING id')
-    return stmt.get(id, role, names, phone).id
+  create({ id, names, phone }) {
+    const stmt = this.db.prepare('INSERT INTO people VALUES (?, ?, ?) RETURNING id')
+    return stmt.get(id, names, phone).id
   }
 
   /** @returns {People_[]} */
@@ -40,14 +40,23 @@ export class People {
     return stmt.get(id)
   }
 
+  addRoles(id, roles) {
+    const stmt = this.db.prepare('INSERT INTO permissions VALUES (?, ?)')
+    for (const role of roles) {
+      stmt.run(id, role.toUpperCase())
+    }
+    return true;
+  }
+
   /**
    * @param {string} id
    * @param {Omit<People_, "id">} people
    * @returns {boolean}
    */
-  update(id, { role, names, phone }) {
-    const stmt = this.db.prepare('UPDATE people SET role=?, names=?, phone=? id=?')
-    return stmt.run(role, names, phone, id).changes > 0
+  update(id, { names, phone, roles }) {
+    const stmt = this.db.prepare('UPDATE people SET names=?, phone=? WHERE id=?')
+    // TODO fix atomicity
+    return stmt.run(names, phone, id).changes > 0 && this.addRoles(id, roles);
   }
 
   /**

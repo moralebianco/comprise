@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS people(
   id     TEXT PRIMARY KEY,
-  role   INT DEFAULT 1,
   names  TEXT NOT NULL,
   phone  TEXT
+  -- TODO add columns as needed
 ) WITHOUT ROWID;
 
 CREATE TABLE IF NOT EXISTS suppliers(
@@ -19,6 +19,13 @@ CREATE TABLE IF NOT EXISTS items(
   metadata  TEXT,
   quantity  REAL DEFAULT 0
 );
+
+CREATE TABLE IF NOT EXISTS permissions(
+  admin_id  TEXT NOT NULL,
+  role      TEXT CHECK(role IN ('ADMIN', 'ALL', 'CASHIER'))
+  FOREIGN KEY(admin_id) REFERENCES people(id),
+  PRIMARY KEY(admin_id, role)
+) WITHOUT ROWID;
 
 CREATE TABLE IF NOT EXISTS orders(
   id          INTEGER PRIMARY KEY AUTOINCREMENT,
