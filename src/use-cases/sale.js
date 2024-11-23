@@ -28,13 +28,13 @@ export class Sale {
    * @returns {number}
    */
   create({ checkoutId, customerId }) {
-    const stmt = this.db.prepare('INSERT INTO sales VALUES (?, ?, ?, ?) RETURNING rowid')
-    return stmt.get(checkoutId, customerId, 0, Date.now()).rowid
+    const stmt = this.db.prepare('INSERT INTO sales VALUES (?, ?, ?, ?) RETURNING id')
+    return stmt.get(checkoutId, customerId, 0, Date.now()).id
   }
 
   /** @returns {Sale_[]} */
   findAll() {
-    const stmt = this.db.prepare('SELECT rowid, * FROM sales')
+    const stmt = this.db.prepare('SELECT * FROM sales')
     return stmt.all().map(sale => clone(sale, snakeToCamel))
   }
 
@@ -43,7 +43,7 @@ export class Sale {
    * @returns {Sale_ | undefined}
    */
   findOne(id) {
-    const stmt = this.db.prepare('SELECT rowid, * FROM sales WHERE rowid=?')
+    const stmt = this.db.prepare('SELECT * FROM sales WHERE id=?')
     return clone(stmt.get(id), snakeToCamel)
   }
 
@@ -64,7 +64,7 @@ export class Sale {
     let stmt = this.db.prepare('REPLACE INTO sales_detail VALUES (?, ?, ?, ?)')
     for (const { itemId, price, quantity } of items)
       stmt.run(itemId, saleId, price, quantity)
-    stmt = this.db.prepare('UPDATE sales SET price=? WHERE rowid=?')
+    stmt = this.db.prepare('UPDATE sales SET price=? WHERE id=?')
     stmt.run(items.reduce((acc, { price, quantity }) => price * quantity + acc, 0), saleId)
   }
 
@@ -73,7 +73,7 @@ export class Sale {
    * @returns {boolean}
    */
   delete(id) {
-    const stmt = this.db.prepare('DELETE FROM sales WHERE rowid=?')
+    const stmt = this.db.prepare('DELETE FROM sales WHERE id=?')
     return stmt.run(id).changes > 0
   }
 }

@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS suppliers(
 ) WITHOUT ROWID;
 
 CREATE TABLE IF NOT EXISTS items(
+  id        INTEGER PRIMARY KEY AUTOINCREMENT,
   name      TEXT NOT NULL,
   price     REAL DEFAULT 0.0,
   metadata  TEXT,
@@ -20,6 +21,7 @@ CREATE TABLE IF NOT EXISTS items(
 );
 
 CREATE TABLE IF NOT EXISTS orders(
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
   admin_id    TEXT,
   supplier_id TEXT,
   price       REAL,
@@ -29,6 +31,7 @@ CREATE TABLE IF NOT EXISTS orders(
 );
 
 CREATE TABLE IF NOT EXISTS sales(
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
   checkout_id INT NOT NULL,
   customer_id TEXT,
   price       REAL,
@@ -41,8 +44,8 @@ CREATE TABLE IF NOT EXISTS orders_detail(
   order_id  INT,
   price     REAL,
   quantity  REAL,
-  FOREIGN KEY(item_id)  REFERENCES items(rowid),
-  FOREIGN KEY(order_id) REFERENCES orders(rowid),
+  FOREIGN KEY(item_id)  REFERENCES items(id),
+  FOREIGN KEY(order_id) REFERENCES orders(id),
   PRIMARY KEY(item_id, order_id)
 ) WITHOUT ROWID;
 
@@ -51,7 +54,7 @@ CREATE TABLE IF NOT EXISTS sales_detail(
   sale_id   INT,
   price     REAL,
   quantity  REAL,
-  FOREIGN KEY(item_id)  REFERENCES items(rowid),
-  FOREIGN KEY(sale_id)  REFERENCES sales(rowid),
+  FOREIGN KEY(item_id)  REFERENCES items(id),
+  FOREIGN KEY(sale_id)  REFERENCES sales(id),
   PRIMARY KEY(item_id, sale_id)
 ) WITHOUT ROWID;

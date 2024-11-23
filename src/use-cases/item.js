@@ -21,14 +21,13 @@ export class Item {
    * @returns {number}
    */
   create({ id, name, price, metadata, quantity }) {
-    const query = 'INSERT INTO items (rowid, name, price, metadata, quantity) VALUES (?, ?, ?, ?, ?) RETURNING rowid'
-    const stmt = this.db.prepare(query)
-    return stmt.get(id ?? null, name, price, metadata, quantity).rowid
+    const stmt = this.db.prepare('INSERT INTO items VALUES (?, ?, ?, ?, ?) RETURNING id')
+    return stmt.get(id ?? null, name, price, metadata, quantity).id
   }
 
   /** @returns {Item_[]} */
   findAll() {
-    const stmt = this.db.prepare('SELECT rowid, * FROM items')
+    const stmt = this.db.prepare('SELECT * FROM items')
     return stmt.all()
   }
 
@@ -37,7 +36,7 @@ export class Item {
    * @returns {Item_ | undefined}
    */
   findOne(id) {
-    const stmt = this.db.prepare('SELECT rowid, * FROM items WHERE rowid=?')
+    const stmt = this.db.prepare('SELECT * FROM items WHERE id=?')
     return stmt.get(id)
   }
 
@@ -56,7 +55,7 @@ export class Item {
    * @returns {boolean}
    */
   delete(id) {
-    const stmt = this.db.prepare('DELETE FROM items WHERE rowid=?')
+    const stmt = this.db.prepare('DELETE FROM items WHERE id=?')
     return stmt.run(id).changes > 0
   }
 }
