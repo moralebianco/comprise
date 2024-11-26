@@ -1,4 +1,3 @@
-// @ts-ignore
 import { DatabaseSync } from 'node:sqlite'
 import { clone, snakeToCamel } from '../util.js'
 
@@ -29,6 +28,7 @@ export class Order {
    */
   create({ adminId, supplierId }) {
     const stmt = this.db.prepare('INSERT INTO orders VALUES (?, ?, ?, ?) RETURNING id')
+    // @ts-ignore
     return stmt.get(adminId, supplierId, 0, Date.now()).id
   }
 

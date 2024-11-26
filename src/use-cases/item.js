@@ -1,4 +1,3 @@
-// @ts-ignore
 import { DatabaseSync } from 'node:sqlite'
 
 /**
@@ -22,12 +21,14 @@ export class Item {
    */
   create({ id, name, price, metadata, quantity }) {
     const stmt = this.db.prepare('INSERT INTO items VALUES (?, ?, ?, ?, ?) RETURNING id')
+    // @ts-ignore
     return stmt.get(id ?? null, name, price, metadata, quantity).id
   }
 
   /** @returns {Item_[]} */
   findAll() {
     const stmt = this.db.prepare('SELECT * FROM items')
+    // @ts-ignore
     return stmt.all()
   }
 
@@ -37,6 +38,7 @@ export class Item {
    */
   findOne(id) {
     const stmt = this.db.prepare('SELECT * FROM items WHERE id=?')
+    // @ts-ignore
     return stmt.get(id)
   }
 
