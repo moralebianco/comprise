@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS people(
+CREATE TABLE IF NOT EXISTS persons(
   id     TEXT PRIMARY KEY,
   names  TEXT NOT NULL,
   phone  TEXT
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS items(
 CREATE TABLE IF NOT EXISTS permissions(
   admin_id  TEXT NOT NULL,
   role      TEXT CHECK(role IN ('ADMIN', 'ALL', 'CASHIER')),
-  FOREIGN KEY(admin_id) REFERENCES people(id),
+  FOREIGN KEY(admin_id) REFERENCES persons(id),
   PRIMARY KEY(admin_id, role)
 ) WITHOUT ROWID;
 
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS orders(
   supplier_id TEXT,
   price       REAL,
   datetime    INT DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY(admin_id)     REFERENCES people(id),
+  FOREIGN KEY(admin_id)     REFERENCES persons(id),
   FOREIGN KEY(supplier_id)  REFERENCES suppliers(id)
 );
 
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS sales(
   customer_id TEXT,
   price       REAL,
   datetime    INT DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY(customer_id)  REFERENCES people(id)
+  FOREIGN KEY(customer_id)  REFERENCES persons(id)
 );
 
 CREATE TABLE IF NOT EXISTS orders_detail(
