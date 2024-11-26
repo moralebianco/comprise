@@ -80,7 +80,8 @@ export default express.Router()
     res.status(201).send(service.create(req.body))
   })
   .get('/:id', (req, res) => {
-    res.send(service.findOne(req.params.id))
+    const e = service.findOne(req.params.id)
+    res.status(e ? 200 : 404).send(e)
   })
   .get('/', (_, res) => {
     res.send(service.findAll())

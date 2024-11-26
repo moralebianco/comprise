@@ -87,7 +87,8 @@ export default express.Router()
     res.status(201).send(service.create(req.body))
   })
   .get('/:id', (req, res) => {
-    res.send(service.findOne(parseInt(req.params.id)))
+    const e = service.findOne(parseInt(req.params.id))
+    res.status(e ? 200 : 404).send(e)
   })
   .get('/:id/items', (req, res) => {
     res.send(service.getItems(parseInt(req.params.id)))
