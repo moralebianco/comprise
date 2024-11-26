@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS items(
 
 CREATE TABLE IF NOT EXISTS permissions(
   admin_id  TEXT NOT NULL,
-  role      TEXT CHECK(role IN ('ADMIN', 'ALL', 'CASHIER'))
+  role      TEXT CHECK(role IN ('ADMIN', 'ALL', 'CASHIER')),
   FOREIGN KEY(admin_id) REFERENCES people(id),
   PRIMARY KEY(admin_id, role)
 ) WITHOUT ROWID;
