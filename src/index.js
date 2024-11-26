@@ -1,4 +1,8 @@
-import { app } from './controllers.js'
+import express from 'express'
+
+const app = express()
+
+// TODO add routers
 
 app.get('/ping', (_, res) => {
   res.send('pong')

@@ -5,6 +5,8 @@ if (!process.env.DB_NAME) {
   throw new Error()
 }
 
-export const db = new DatabaseSync(process.env.DB_NAME)
+const database = new DatabaseSync(process.env.DB_NAME)
 
-db.exec(readFileSync('init.sql', 'utf8'))
+database.exec(readFileSync('init.sql', 'utf8'))
+
+export default database

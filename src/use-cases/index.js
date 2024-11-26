@@ -1,5 +1,0 @@
-export { Item } from './item.js'
-export { Order } from './order.js'
-export { People } from './people.js'
-export { Sale } from './sale.js'
-export { Supplier } from './supplier.js'

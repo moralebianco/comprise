@@ -1,4 +1,6 @@
+import express from 'express'
 import { DatabaseSync } from 'node:sqlite'
+import database from '../database.js'
 
 /**
  * @typedef {{
@@ -61,3 +63,25 @@ export class Item {
     return stmt.run(id).changes > 0
   }
 }
+
+const service = new Item(database)
+
+export default express.Router()
+  .post('/', (req, res) => {
+    res.send(service.create(req.body))
+  })
+  .get('/:id', (req, res) => {
+    res.send(service.findOne(parseInt(req.params.id)))
+  })
+  .get('/', (_, res) => {
+    res.send(service.findAll())
+  })
+  .put('/:id', (req, res) => {
+    if (service.findOne(parseInt(req.params.id)))
+      res.send(service.update(parseInt(req.params.id), req.body))
+    else
+      res.send(service.create(req.body))
+  })
+  .delete('/:id', (req, res) => {
+    res.send(service.delete(parseInt(req.params.id)))
+  })
