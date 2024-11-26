@@ -68,7 +68,7 @@ const service = new Supplier(database)
 
 export default express.Router()
   .post('/', (req, res) => {
-    res.send(service.create(req.body))
+    res.status(201).send(service.create(req.body))
   })
   .get('/:id', (req, res) => {
     res.send(service.findOne(req.params.id))
@@ -80,7 +80,7 @@ export default express.Router()
     if (service.findOne(req.params.id))
       res.send(service.update(req.params.id, req.body))
     else
-      res.send(service.create(req.body))
+      res.status(201).send(service.create(req.body))
   })
   .delete('/:id', (req, res) => {
     res.send(service.delete(req.params.id))

@@ -84,7 +84,7 @@ const service = new Sale(database)
 
 export default express.Router()
   .post('/', (req, res) => {
-    res.send(service.create(req.body))
+    res.status(201).send(service.create(req.body))
   })
   .get('/:id', (req, res) => {
     res.send(service.findOne(parseInt(req.params.id)))
