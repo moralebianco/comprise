@@ -1,3 +1,4 @@
 proj.db
 node_modules/
 .env
+.vscode
