@@ -1,5 +1,4 @@
 import express from 'express';
-import { DatabaseSync } from 'node:sqlite';
 import database from '../database.js';
 
 /**
@@ -12,7 +11,7 @@ import database from '../database.js';
  */
 
 export class Person {
-  /** @param {DatabaseSync} db  */
+  /** @param {import('node:sqlite').DatabaseSync} db */
   constructor(db) {
     this.db = db;
   }
