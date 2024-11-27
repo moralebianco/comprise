@@ -13,5 +13,12 @@
   "dependencies": {
     "express": "^5.0.0",
     "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.1"
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "singleQuote": true
   }
 }
