@@ -107,7 +107,9 @@ export default express
     res.send(service.findAll());
   })
   .put('/:id/items', (req, res) => {
-    res.send(service.setItems(parseInt(req.params.id), req.body.items));
+    res
+      .status(204)
+      .send(service.setItems(parseInt(req.params.id), req.body.items));
   })
   .delete('/:id', (req, res) => {
     res.send(service.delete(parseInt(req.params.id)));
