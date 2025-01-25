@@ -4,6 +4,7 @@ import { readdirSync } from 'node:fs';
 
 const app = express();
 
+app.use(express.json());
 app.use(
   morgan('common', {
     skip: (_, res) => res.statusCode < 400,
@@ -11,11 +12,14 @@ app.use(
 );
 
 readdirSync('./src/modules').forEach(async (f) => {
-  app.use(`/${f.slice(0, -3)}s`, (await import(`./modules/${f}`)).default);
+  app.use(`/api/${f.slice(0, -3)}s`, (await import(`./modules/${f}`)).default);
 });
 
 app.get('/ping', (_, res) => {
   res.send('pong');
 });
 
-app.listen(process.env.APP_PORT);
+app.listen(process.env.APP_PORT, () => {
+  if (process.env.NODE_ENV === 'test')
+    readdirSync('./src/test').map((f) => import(`./test/${f}`));
+});

@@ -1,4 +1,4 @@
 proj.db
 node_modules/
-.env
+.env*
 .vscode
