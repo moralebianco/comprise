@@ -17,3 +17,35 @@ export function clone(obj, func = (s) => s) {
   for (const key in obj) copy[func(key)] = obj[key];
   return copy;
 }
+
+/**
+ * @template T
+ * @param {unknown} obj
+ * @param {T} tpt template
+ * @returns {obj is T}
+ */
+export function isTypeOf(obj, tpt) {
+  switch (typeof tpt) {
+    case 'boolean':
+      if (!tpt && obj === undefined) return true;
+      return typeof obj === 'boolean';
+    case 'number':
+      if (tpt === 0 && obj === undefined) return true;
+      if (typeof obj !== 'number' || !Number.isFinite(obj)) return false;
+      return !Number.isInteger(tpt) || Number.isInteger(obj);
+    case 'string':
+      if (tpt === '' && obj === undefined) return true;
+      return typeof obj === 'string' && obj.match(tpt) !== null;
+    case 'object':
+      if (tpt === null) return obj == undefined;
+      if (Array.isArray(tpt)) {
+        if (!Array.isArray(obj)) return false;
+        if (tpt.length === 0) return true;
+        return !obj.some((o) => !isTypeOf(o, tpt[0]));
+      }
+      if (typeof obj !== 'object' || obj === null) return false;
+      return !Object.keys(tpt).some((k) => !isTypeOf(obj[k], tpt[k]));
+    default:
+      throw new Error();
+  }
+}
