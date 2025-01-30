@@ -1,13 +1,17 @@
 import express from 'express';
 import database from '../database.js';
+import { isTypeOf } from '../util.js';
+
+const E = {
+  id: 0,
+  name: '.+',
+  price: 0.1,
+  metadata: '.*',
+  quantity: 1,
+};
 
 /**
- * @typedef {{
- *  name: string,
- *  price: number,
- *  metadata: string,
- *  quantity: number
- * }} Item_
+ * @typedef {typeof E} Item_
  */
 
 export class Item {
@@ -17,7 +21,7 @@ export class Item {
   }
 
   /**
-   * @param {Item_ & { id?: number }} item
+   * @param {Item_} item
    * @returns {number}
    */
   create({ id, name, price, metadata, quantity }) {
@@ -71,21 +75,28 @@ const service = new Item(database);
 
 export default express
   .Router()
-  .post('/', (req, res) => {
-    res.status(201).send(service.create(req.body));
+  .post('/', ({ body }, res) => {
+    if (isTypeOf(body, E)) {
+      res.status(201).send(service.create(body));
+    } else res.status(400).send();
   })
-  .get('/:id', (req, res) => {
-    const e = service.findOne(parseInt(req.params.id));
-    res.status(e ? 200 : 404).send(e);
+  .get('/:id', ({ params }, res) => {
+    if (isTypeOf(+params.id, 1)) {
+      const e = service.findOne(+params.id);
+      res.status(e ? 200 : 404).send(e);
+    } else res.status(400).end();
   })
   .get('/', (_, res) => {
     res.send(service.findAll());
   })
-  .put('/:id', (req, res) => {
-    if (service.findOne(parseInt(req.params.id)))
-      res.send(service.update(parseInt(req.params.id), req.body));
-    else res.status(201).send(service.create(req.body));
+  .put('/:id', ({ params, body }, res) => {
+    if (isTypeOf(+params.id, 1) && isTypeOf(body, E)) {
+      if (service.findOne(+params.id))
+        res.send(service.update(+params.id, body));
+      else res.status(201).send(service.create(body));
+    } else res.status(400).end();
   })
-  .delete('/:id', (req, res) => {
-    res.send(service.delete(parseInt(req.params.id)));
+  .delete('/:id', ({ params }, res) => {
+    if (isTypeOf(+params.id, 1)) res.send(service.delete(+params.id));
+    else res.status(400).end();
   });

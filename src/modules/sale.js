@@ -1,20 +1,25 @@
 import express from 'express';
-import { clone, snakeToCamel } from '../util.js';
+import { clone, isTypeOf, snakeToCamel } from '../util.js';
 import database from '../database.js';
 
+const E = {
+  checkoutId: 1,
+  customerId: '.+',
+  price: 0.1,
+  datetime: 1,
+};
+
+const I = {
+  itemId: 1,
+  customerId: '.+',
+  price: 0.1,
+  quantity: 1,
+};
+
 /**
- * @typedef {{
- *  checkoutId: number,
- *  customerId: string,
- *  price: number,
- *  datetime: number
- * }} Sale_
+ * @typedef {typeof E} Sale_
  *
- * @typedef {{
- *  itemId: number,
- *  price: number,
- *  quantity: number
- * }} SaleItem
+ * @typedef {typeof I} SaleItem
  */
 
 export class Sale {
@@ -88,24 +93,32 @@ const service = new Sale(database);
 
 export default express
   .Router()
-  .post('/', (req, res) => {
-    res.status(201).send(service.create(req.body));
+  .post('/', ({ body }, res) => {
+    if (isTypeOf(body, E)) {
+      res.status(201).send(service.create(body));
+    } else res.status(400).end();
   })
-  .get('/:id', (req, res) => {
-    const e = service.findOne(parseInt(req.params.id));
-    res.status(e ? 200 : 404).send(e);
+  .get('/:id', ({ params }, res) => {
+    if (isTypeOf(+params.id, 1)) {
+      const e = service.findOne(+params.id);
+      res.status(e ? 200 : 404).send(e);
+    } else res.status(400).end();
   })
-  .get('/:id/items', (req, res) => {
-    res.send(service.getItems(parseInt(req.params.id)));
+  .get('/:id/items', ({ params }, res) => {
+    if (isTypeOf(+params.id, 1)) {
+      res.send(service.getItems(+params.id));
+    } else res.status(400).end();
   })
   .get('/', (_, res) => {
     res.send(service.findAll());
   })
-  .put('/:id/items', (req, res) => {
-    res
-      .status(204)
-      .send(service.setItems(parseInt(req.params.id), req.body.items));
+  .put('/:id/items', ({ params, body: { items } }, res) => {
+    if (isTypeOf(+params.id, 1) && isTypeOf(items, [I])) {
+      res.status(204).send(service.setItems(+params.id, items));
+    } else res.status(400).end();
   })
-  .delete('/:id', (req, res) => {
-    res.send(service.delete(parseInt(req.params.id)));
+  .delete('/:id', ({ params }, res) => {
+    if (isTypeOf(+params.id, 1)) {
+      res.send(service.delete(+params.id));
+    } else res.status(400).end();
   });

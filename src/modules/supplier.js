@@ -1,13 +1,16 @@
 import express from 'express';
 import database from '../database.js';
+import { isTypeOf } from '../util.js';
+
+const E = {
+  id: '.+',
+  name: '.+',
+  phone: '.*',
+  email: '.*',
+};
 
 /**
- * @typedef {{
- *  id: string,
- *  name: string,
- *  phone: string,
- *  email: string
- * }} Supplier_
+ * @typedef {typeof E} Supplier_
  */
 
 export class Supplier {
@@ -71,21 +74,28 @@ const service = new Supplier(database);
 
 export default express
   .Router()
-  .post('/', (req, res) => {
-    res.status(201).send(service.create(req.body));
+  .post('/', ({ body }, res) => {
+    if (isTypeOf(body, E)) {
+      res.status(201).send(service.create(body));
+    } else res.status(400).end();
   })
-  .get('/:id', (req, res) => {
-    const e = service.findOne(req.params.id);
-    res.status(e ? 200 : 404).send(e);
+  .get('/:id', ({ params }, res) => {
+    if (isTypeOf(params.id, '.+')) {
+      const e = service.findOne(params.id);
+      res.status(e ? 200 : 404).send(e);
+    } else res.status(400).end();
   })
   .get('/', (_, res) => {
     res.send(service.findAll());
   })
-  .put('/:id', (req, res) => {
-    if (service.findOne(req.params.id))
-      res.send(service.update(req.params.id, req.body));
-    else res.status(201).send(service.create(req.body));
+  .put('/:id', ({ params, body }, res) => {
+    if (isTypeOf(params.id, '.+') && isTypeOf(body, E)) {
+      if (service.findOne(params.id)) res.send(service.update(params.id, body));
+      else res.status(201).send(service.create(body));
+    } else res.status(400).end();
   })
-  .delete('/:id', (req, res) => {
-    res.send(service.delete(req.params.id));
+  .delete('/:id', ({ params }, res) => {
+    if (isTypeOf(params.id, '.+')) {
+      res.send(service.delete(params.id));
+    } else res.status(400).end();
   });
