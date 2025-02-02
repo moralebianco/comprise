@@ -31,11 +31,10 @@ export function isTypeOf(obj, tpt) {
       return typeof obj === 'boolean';
     case 'number':
       if (tpt === 0 && obj === undefined) return true;
-      if (typeof obj !== 'number' || !Number.isFinite(obj)) return false;
-      return !Number.isInteger(tpt) || Number.isInteger(obj);
+      return typeof obj === 'number' && Number.isFinite(obj);
     case 'string':
       if (tpt === '' && obj === undefined) return true;
-      return typeof obj === 'string' && obj.match(tpt) !== null;
+      return typeof obj === 'string';
     case 'object':
       if (tpt === null) return obj == undefined;
       if (Array.isArray(tpt)) {

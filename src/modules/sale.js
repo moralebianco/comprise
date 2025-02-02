@@ -4,14 +4,14 @@ import database from '../database.js';
 
 const E = {
   checkoutId: 1,
-  customerId: '.+',
+  customerId: '.',
   price: 0.1,
   datetime: 1,
 };
 
 const I = {
   itemId: 1,
-  customerId: '.+',
+  customerId: '.',
   price: 0.1,
   quantity: 1,
 };

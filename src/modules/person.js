@@ -3,10 +3,10 @@ import database from '../database.js';
 import { isTypeOf } from '../util.js';
 
 const E = {
-  id: '.+',
-  roles: ['.+'],
-  names: '.+',
-  phone: '.*',
+  id: '.',
+  roles: ['.'],
+  names: '.',
+  phone: '.',
 };
 
 /**

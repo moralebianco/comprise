@@ -4,9 +4,9 @@ import { isTypeOf } from '../util.js';
 
 const E = {
   id: 0,
-  name: '.+',
+  name: '.',
   price: 0.1,
-  metadata: '.*',
+  metadata: '',
   quantity: 1,
 };
 
