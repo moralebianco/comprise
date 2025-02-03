@@ -21,5 +21,5 @@ app.get('/ping', (_, res) => {
 
 app.listen(process.env.APP_PORT, () => {
   if (process.env.NODE_ENV === 'test')
-    readdirSync('./src/test').map((f) => import(`./test/${f}`));
+    readdirSync('./src/tests').map((f) => import(`./tests/${f}`));
 });
