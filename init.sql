@@ -65,3 +65,5 @@ CREATE TABLE IF NOT EXISTS sales_detail(
   FOREIGN KEY(sale_id)  REFERENCES sales(id),
   PRIMARY KEY(item_id, sale_id)
 ) WITHOUT ROWID;
+
+INSERT OR IGNORE INTO persons VALUES ('0', 'null', NULL);
