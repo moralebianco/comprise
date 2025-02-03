@@ -5,13 +5,13 @@ import database from '../database.js';
 const E = {
   checkoutId: 1,
   customerId: '.',
-  price: 0.1,
-  datetime: 1,
+  price: 0,
+  datetime: 0,
 };
 
 const I = {
   itemId: 1,
-  customerId: '.',
+  saleId: 0,
   price: 0.1,
   quantity: 1,
 };
@@ -29,15 +29,15 @@ export class Sale {
   }
 
   /**
-   * @param {Omit<Sale_, "price" | "datetime">} sale
+   * @param {Sale_} sale
    * @returns {number}
    */
   create({ checkoutId, customerId }) {
     const stmt = this.db.prepare(
-      'INSERT INTO sales VALUES (?, ?, ?, ?) RETURNING id'
+      'INSERT INTO sales (checkout_id, customer_id) VALUES (?, ?) RETURNING id'
     );
     // @ts-ignore
-    return stmt.get(checkoutId, customerId, 0, Date.now()).id;
+    return stmt.get(checkoutId, customerId).id;
   }
 
   /** @returns {Sale_[]} */

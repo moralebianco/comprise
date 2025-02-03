@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS orders(
   id          INTEGER PRIMARY KEY AUTOINCREMENT,
   admin_id    TEXT,
   supplier_id TEXT,
-  price       REAL,
+  price       REAL DEFAULT 0,
   datetime    INT DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY(admin_id)     REFERENCES persons(id),
   FOREIGN KEY(supplier_id)  REFERENCES suppliers(id)
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS sales(
   id          INTEGER PRIMARY KEY AUTOINCREMENT,
   checkout_id INT NOT NULL,
   customer_id TEXT,
-  price       REAL,
+  price       REAL DEFAULT 0,
   datetime    INT DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY(customer_id)  REFERENCES persons(id)
 );
