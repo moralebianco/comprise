@@ -5,3 +5,5 @@ declare namespace NodeJS {
     NODE_ENV: string;
   }
 }
+
+export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;

@@ -21,7 +21,7 @@ export class Item {
   }
 
   /**
-   * @param {Item_} item
+   * @param {import('../types.js').Optional<Item_, 'id'>} item
    * @returns {number}
    */
   create({ id, name, price, metadata, quantity }) {
@@ -51,7 +51,7 @@ export class Item {
 
   /**
    * @param {number} id
-   * @param {Item_} item
+   * @param {import('../types.js').Optional<Item_, 'id'>} item
    * @returns {boolean}
    */
   update(id, { name, price, metadata, quantity }) {
