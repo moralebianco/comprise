@@ -67,3 +67,9 @@ CREATE TABLE IF NOT EXISTS sales_detail(
 ) WITHOUT ROWID;
 
 INSERT OR IGNORE INTO persons VALUES ('0', 'null', NULL);
+
+CREATE TRIGGER forbid_delete_persons_id_0
+BEFORE DELETE ON persons WHEN OLD.id = '0'
+BEGIN
+  SELECT RAISE(FAIL, '');
+END;
