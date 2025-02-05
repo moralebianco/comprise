@@ -4,7 +4,7 @@ import { isTypeOf } from '../util.js';
 
 const E = {
   id: '.',
-  roles: ['.'],
+  roles: [''],
   names: '.',
   phone: '.',
 };
@@ -20,15 +20,13 @@ export class Person {
   }
 
   /**
-   * @param {Person_} person
-   * @returns {string}
+   * @param {import('../types.js').Optional<Person_, 'roles'>} person
    */
-  create({ id, names, phone }) {
-    const stmt = this.db.prepare(
-      'INSERT INTO persons VALUES (?, ?, ?) RETURNING id'
-    );
+  create({ id, roles, names, phone }) {
+    const stmt = this.db.prepare('INSERT INTO persons VALUES (?, ?, ?)');
     // @ts-ignore
-    return stmt.get(id, names, phone).id;
+    stmt.get(id, names, phone);
+    if (roles) this.setRoles(id, roles);
   }
 
   /** @returns {Person_[]} */
@@ -48,12 +46,11 @@ export class Person {
     return stmt.get(id);
   }
 
-  addRoles(id, roles) {
+  /** @param {string[]} roles */
+  setRoles(id, roles) {
+    this.db.prepare('DELETE FROM permissions WHERE admin_id=?').run(id);
     const stmt = this.db.prepare('INSERT INTO permissions VALUES (?, ?)');
-    for (const role of roles) {
-      stmt.run(id, role.toUpperCase());
-    }
-    return true;
+    for (const role of roles) stmt.run(id, role.toUpperCase());
   }
 
   /**
@@ -66,7 +63,8 @@ export class Person {
       'UPDATE persons SET names=?, phone=? WHERE id=?'
     );
     // TODO fix atomicity
-    return stmt.run(names, phone, id).changes > 0 && this.addRoles(id, roles);
+    this.setRoles(id, roles);
+    return stmt.run(names, phone, id).changes > 0;
   }
 
   /**
