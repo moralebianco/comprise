@@ -17,9 +17,9 @@ const I = {
 };
 
 /**
- * @typedef {typeof E} Sale_
- *
  * @typedef {typeof I} SaleItem
+ *
+ * @typedef {typeof E & { items?: SaleItem[] }} Sale_
  */
 
 export class Sale {
@@ -50,9 +50,13 @@ export class Sale {
    * @param {number} id
    * @returns {Sale_ | undefined}
    */
-  findOne(id) {
+  findOne(id, { items = false } = {}) {
     const stmt = this.db.prepare('SELECT * FROM sales WHERE id=?');
-    return clone(stmt.get(id), snakeToCamel);
+    const obj = clone(stmt.get(id), snakeToCamel);
+    if (obj) {
+      if (items) obj.items = this.getItems(id);
+    }
+    return obj;
   }
 
   /**
@@ -69,7 +73,8 @@ export class Sale {
    * @param {Array<SaleItem>} items
    */
   setItems(saleId, items) {
-    let stmt = this.db.prepare('REPLACE INTO sales_detail VALUES (?, ?, ?, ?)');
+    this.db.prepare('DELETE FROM sales_detail WHERE sale_id=?').run(saleId);
+    let stmt = this.db.prepare('INSERT INTO sales_detail VALUES (?, ?, ?, ?)');
     for (const { itemId, price, quantity } of items)
       stmt.run(itemId, saleId, price, quantity);
     stmt = this.db.prepare('UPDATE sales SET price=? WHERE id=?');
@@ -98,9 +103,9 @@ export default express
       res.status(201).send(service.create(body));
     } else res.status(400).end();
   })
-  .get('/:id', ({ params }, res) => {
+  .get('/:id', ({ params, query }, res) => {
     if (isTypeOf(+params.id, 1)) {
-      const e = service.findOne(+params.id);
+      const e = service.findOne(+params.id, query);
       res.status(e ? 200 : 404).send(e);
     } else res.status(400).end();
   })
