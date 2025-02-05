@@ -40,6 +40,10 @@ describe(import.meta.filename, () => {
     });
   });
 
+  it('getRoles', () => {
+    assert.deepEqual(service.getRoles('10B1'), ['ADMIN', 'CASHIER']);
+  });
+
   it('setRoles (fail)', () => {
     assert.throws(() => {
       service.setRoles('10B1', ['BAD']);

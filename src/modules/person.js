@@ -40,10 +40,13 @@ export class Person {
    * @param {string} id
    * @returns {Person_ | undefined}
    */
-  findOne(id) {
+  findOne(id, { roles = false } = {}) {
     const stmt = this.db.prepare('SELECT * FROM persons WHERE id=?');
-    // @ts-ignore
-    return stmt.get(id);
+    const obj = /** @type {Person_} */ (stmt.get(id));
+    if (obj) {
+      if (roles) obj.roles = this.getRoles(id);
+    }
+    return obj;
   }
 
   /** @param {string[]} roles */
@@ -51,6 +54,13 @@ export class Person {
     this.db.prepare('DELETE FROM permissions WHERE admin_id=?').run(id);
     const stmt = this.db.prepare('INSERT INTO permissions VALUES (?, ?)');
     for (const role of roles) stmt.run(id, role.toUpperCase());
+  }
+
+  /** @returns {string[]} */
+  getRoles(id) {
+    const stmt = this.db.prepare('SELECT * FROM permissions WHERE admin_id=?');
+    // @ts-ignore
+    return stmt.all(id).map(({ role }) => role);
   }
 
   /**
@@ -86,9 +96,9 @@ export default express
       res.status(201).send(service.create(body));
     } else res.status(400).end();
   })
-  .get('/:id', ({ params }, res) => {
+  .get('/:id', ({ params, query }, res) => {
     if (isTypeOf(params.id, '.+')) {
-      const e = service.findOne(params.id);
+      const e = service.findOne(params.id, query);
       res.status(e ? 200 : 404).send(e);
     } else res.status(400).end();
   })
