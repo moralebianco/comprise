@@ -1,5 +1,5 @@
 import express from 'express';
-import { clone, isTypeOf, snakeToCamel } from '../util.js';
+import { clone, isTypeOf, PAGE, snakeToCamel } from '../util.js';
 import database from '../database.js';
 
 const E = {
@@ -41,9 +41,11 @@ export class Sale {
   }
 
   /** @returns {Sale_[]} */
-  findAll() {
-    const stmt = this.db.prepare('SELECT * FROM sales');
-    return stmt.all().map((sale) => clone(sale, snakeToCamel));
+  findAll({ limit = 100, offset = 0 } = {}) {
+    const stmt = this.db.prepare(
+      'SELECT * FROM sales ORDER BY datetime LIMIT ? OFFSET ?'
+    );
+    return stmt.all(limit, offset).map((sale) => clone(sale, snakeToCamel));
   }
 
   /**
@@ -114,8 +116,10 @@ export default express
       res.send(service.getItems(+params.id));
     } else res.status(400).end();
   })
-  .get('/', (_, res) => {
-    res.send(service.findAll());
+  .get('/', ({ query }, res) => {
+    if (isTypeOf(query, PAGE)) {
+      res.send(service.findAll(query));
+    } else res.status(400).end();
   })
   .put('/:id/items', ({ params, body: { items } }, res) => {
     if (isTypeOf(+params.id, 1) && isTypeOf(items, [I])) {

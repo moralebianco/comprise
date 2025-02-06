@@ -1,6 +1,6 @@
 import express from 'express';
 import database from '../database.js';
-import { isTypeOf } from '../util.js';
+import { isTypeOf, PAGE } from '../util.js';
 
 const E = {
   id: '.',
@@ -32,10 +32,10 @@ export class Supplier {
   }
 
   /** @returns {Supplier_[]} */
-  findAll() {
-    const stmt = this.db.prepare('SELECT * FROM suppliers');
+  findAll({ limit = 100, offset = 0 } = {}) {
+    const stmt = this.db.prepare('SELECT * FROM suppliers LIMIT ? OFFSET ?');
     // @ts-ignore
-    return stmt.all();
+    return stmt.all(limit, offset);
   }
 
   /**
@@ -85,8 +85,10 @@ export default express
       res.status(e ? 200 : 404).send(e);
     } else res.status(400).end();
   })
-  .get('/', (_, res) => {
-    res.send(service.findAll());
+  .get('/', ({ query }, res) => {
+    if (isTypeOf(query, PAGE)) {
+      res.send(service.findAll(query));
+    } else res.status(400).end();
   })
   .put('/:id', ({ params, body }, res) => {
     if (isTypeOf(params.id, '.+') && isTypeOf(body, E)) {

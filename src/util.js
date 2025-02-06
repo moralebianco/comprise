@@ -1,3 +1,6 @@
+/** @type {{ limit: number; offset: number }} */
+export const PAGE = Object.freeze({ limit: 0, offset: 0 });
+
 export function snakeToCamel(str) {
   return str.replace(/([a-z]_[a-z])/g, (g) => `${g[0]}${g[2].toUpperCase()}`);
 }
