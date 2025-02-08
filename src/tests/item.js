@@ -10,42 +10,42 @@ const $ = [
 ];
 
 describe(import.meta.filename, () => {
-  it('findAll', () => assert.deepEqual(service.findAll(), []));
+  it('return an empty array', () => assert.deepEqual(service.findAll(), []));
 
-  it('create', () => {
+  it('return id 1 after inserting first record', () => {
     assert.equal(service.create($[0]), 1);
     $[0].id = 1;
-    assert.equal(service.create($[1]), $[1].id);
   });
 
-  it('create (fail)', () => {
-    assert.throws(() => {
-      service.create($[0]);
-    });
-  });
+  it('return the id of the inserted record', () =>
+    assert.equal(service.create($[1]), $[1].id));
 
-  it('findAll', () => assert.deepEqual(service.findAll(), $));
+  it('throw an error if the id exists', () =>
+    assert.throws(() => service.create($[0])));
 
-  it('update', () => {
+  it('return the inserted record', () =>
+    assert.deepEqual(service.findAll(), $));
+
+  it('update nicely if all parameters are okay', () => {
     $[0].metadata = '1';
     assert.ok(service.update(1, $[0]));
     assert.deepEqual(service.findAll(), $);
   });
 
-  it('update (fail)', () => {
-    assert.ok(!service.update(2, $[0]));
-  });
+  it('not update if the id does not exist', () =>
+    assert.ok(!service.update(2, $[0])));
 
-  it('delete', () => {
+  it('delete nicely if the id exists', () => {
     assert.ok(service.delete(1));
     assert.deepEqual(service.findAll(), [$[1]]);
   });
 
-  it('delete (fail)', () => assert.ok(!service.delete(2)));
+  it('not delete if the id does not exist', () =>
+    assert.ok(!service.delete(2)));
 
-  it('findOne', () => assert.deepEqual(service.findOne(3), $[1]));
+  it('return the record with id 3', () =>
+    assert.deepEqual(service.findOne(3), $[1]));
 
-  it('findOne (fail)', () => {
-    assert.equal(service.findOne(0), undefined);
-  });
+  it('return undefined if id does not exist', () =>
+    assert.equal(service.findOne(0), undefined));
 });

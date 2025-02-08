@@ -11,68 +11,51 @@ const $ = [
 ];
 
 describe(import.meta.filename, () => {
-  it('findAll', () => {
-    assert.deepEqual(service.findAll(), [N]);
-  });
+  it('return an array with the default record', () =>
+    assert.deepEqual(service.findAll(), [N]));
 
-  it('create', () => {
+  it('not throw errors inserting valid records', () => {
     assert.doesNotThrow(() => service.create($[0]));
     assert.doesNotThrow(() => service.create($[1]));
   });
 
-  it('findAll', () => assert.deepEqual(service.findAll(), [N, ...$]));
+  it('return an array with the three records', () =>
+    assert.deepEqual(service.findAll(), [N, ...$]));
 
-  it('create (fail)', () => {
-    assert.throws(() => {
-      service.create($[0]);
-    });
-  });
+  it('throw an error if the record was saved before', () =>
+    assert.throws(() => service.create($[0])));
 
-  it('setRoles', () => {
-    assert.doesNotThrow(() => {
-      service.setRoles('10B1', ['ADMIN', 'CASHIER']);
-    });
-  });
+  it('not throw an error inserting valid roles', () =>
+    assert.doesNotThrow(() => service.setRoles('10B1', ['ADMIN', 'CASHIER'])));
 
-  it('setRoles (fail)', () => {
-    assert.throws(() => {
-      service.setRoles('', ['CAHISER']);
-    });
-  });
+  it("throw an error if the id is ''", () =>
+    assert.throws(() => service.setRoles('', ['CAHISER'])));
 
-  it('getRoles', () => {
-    assert.deepEqual(service.getRoles('10B1'), ['ADMIN', 'CASHIER']);
-  });
+  it('return an array with the roles if id exists', () =>
+    assert.deepEqual(service.getRoles('10B1'), ['ADMIN', 'CASHIER']));
 
-  it('setRoles (fail)', () => {
-    assert.throws(() => {
-      service.setRoles('10B1', ['BAD']);
-    });
-  });
+  it('throw an error if there is an invalid role', () =>
+    assert.throws(() => service.setRoles('10B1', ['BAD'])));
 
-  it('update', () => {
+  it('update nicely if all parameters are okay', () => {
     $[0] = { ...$[0], phone: '+1 304 001' };
     assert.ok(service.update('10B1', { ...$[0], roles: [] }));
   });
 
-  it('update (fail)', () => {
-    assert.ok(!service.update('WTH', { ...$[0], roles: [] }));
-  });
+  it('not update if the id does not exist', () =>
+    assert.ok(!service.update('WTH', { ...$[0], roles: [] })));
 
-  it('delete', () => {
+  it('delete nicely if the id exists', () => {
     assert.ok(service.delete('208A'));
     assert.equal(service.findAll().length, 2);
   });
 
-  it('delete (fail)', () => assert.ok(!service.delete('BAD')));
+  it('not delete if the id does not exist', () =>
+    assert.ok(!service.delete('BAD')));
 
-  it('delete (fail)', () => {
-    assert.throws(() => {
-      service.delete('0');
-    });
-  });
+  it('throw an error trying to delete the default record', () =>
+    assert.throws(() => service.delete('0')));
 
-  it('findOne', () => {
-    assert.deepEqual(service.findOne('10B1'), $[0]);
-  });
+  it("return the recod with id '10B1'", () =>
+    assert.deepEqual(service.findOne('10B1'), $[0]));
 });
