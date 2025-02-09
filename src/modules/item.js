@@ -20,10 +20,7 @@ export class Item {
     this.db = db;
   }
 
-  /**
-   * @param {import('../types.js').Optional<Item_, 'id'>} item
-   * @returns {number}
-   */
+  /** @param {import('../types.js').Optional<Item_, 'id'>} item */
   create({ id, name, price, metadata, quantity }) {
     const stmt = this.db.prepare(
       'INSERT INTO items VALUES (?, ?, ?, ?, ?) RETURNING id'
@@ -43,27 +40,20 @@ export class Item {
     return stmt.all(q).map(({ id }) => this.findOne(id));
   }
 
-  /** @returns {Item_[]} */
   findAll({ limit = 100, offset = 0 } = {}) {
     const stmt = this.db.prepare('SELECT * FROM items LIMIT ? OFFSET ?');
-    // @ts-ignore
     return stmt.all(limit, offset);
   }
 
-  /**
-   * @param {number} id
-   * @returns {Item_ | undefined}
-   */
+  /** @param {number} id */
   findOne(id) {
     const stmt = this.db.prepare('SELECT * FROM items WHERE id=?');
-    // @ts-ignore
     return stmt.get(id);
   }
 
   /**
    * @param {number} id
    * @param {import('../types.js').Optional<Item_, 'id'>} item
-   * @returns {boolean}
    */
   update(id, { name, price, metadata, quantity }) {
     const stmt = this.db.prepare(
@@ -72,10 +62,7 @@ export class Item {
     return stmt.run(name, price, metadata, quantity, id).changes > 0;
   }
 
-  /**
-   * @param {number} id
-   * @returns {boolean}
-   */
+  /** @param {number} id */
   delete(id) {
     const stmt = this.db.prepare('DELETE FROM items WHERE id=?');
     return stmt.run(id).changes > 0;

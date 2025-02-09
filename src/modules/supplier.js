@@ -19,10 +19,7 @@ export class Supplier {
     this.db = db;
   }
 
-  /**
-   * @param {Supplier_} supplier
-   * @returns {string}
-   */
+  /** @param {Supplier_} supplier */
   create({ id, name, phone, email }) {
     const stmt = this.db.prepare(
       'INSERT INTO suppliers VALUES (?, ?, ?, ?) RETURNING id'
@@ -31,27 +28,20 @@ export class Supplier {
     return stmt.get(id, name, phone, email).id;
   }
 
-  /** @returns {Supplier_[]} */
   findAll({ limit = 100, offset = 0 } = {}) {
     const stmt = this.db.prepare('SELECT * FROM suppliers LIMIT ? OFFSET ?');
-    // @ts-ignore
     return stmt.all(limit, offset);
   }
 
-  /**
-   * @param {string} id
-   * @returns {Supplier_ | undefined}
-   */
+  /** @param {string} id */
   findOne(id) {
     const stmt = this.db.prepare('SELECT * FROM suppliers WHERE id=?');
-    // @ts-ignore
     return stmt.get(id);
   }
 
   /**
    * @param {string} id
    * @param {Omit<Supplier_, "id">} supplier
-   * @returns {boolean}
    */
   update(id, { name, phone, email }) {
     const stmt = this.db.prepare(
@@ -60,10 +50,7 @@ export class Supplier {
     return stmt.run(name, phone, email, id).changes > 0;
   }
 
-  /**
-   * @param {string} id
-   * @returns {boolean}
-   */
+  /** @param {string} id */
   delete(id) {
     const stmt = this.db.prepare('DELETE FROM suppliers WHERE id=?');
     return stmt.run(id).changes > 0;

@@ -19,27 +19,19 @@ export class Person {
     this.db = db;
   }
 
-  /**
-   * @param {import('../types.js').Optional<Person_, 'roles'>} person
-   */
+  /** @param {import('../types.js').Optional<Person_, 'roles'>} person */
   create({ id, roles, names, phone }) {
     const stmt = this.db.prepare('INSERT INTO persons VALUES (?, ?, ?)');
-    // @ts-ignore
     stmt.get(id, names, phone);
     if (roles) this.setRoles(id, roles);
   }
 
-  /** @returns {Person_[]} */
   findAll({ limit = 100, offset = 0 } = {}) {
     const stmt = this.db.prepare('SELECT * FROM persons LIMIT ? OFFSET ?');
-    // @ts-ignore
     return stmt.all(limit, offset);
   }
 
-  /**
-   * @param {string} id
-   * @returns {Person_ | undefined}
-   */
+  /** @param {string} id */
   findOne(id, { roles = false } = {}) {
     const stmt = this.db.prepare('SELECT * FROM persons WHERE id=?');
     const obj = /** @type {Person_} */ (stmt.get(id));
@@ -66,7 +58,6 @@ export class Person {
   /**
    * @param {string} id
    * @param {Omit<Person_, "id">} person
-   * @returns {boolean}
    */
   update(id, { names, phone, roles }) {
     const stmt = this.db.prepare(
@@ -77,10 +68,7 @@ export class Person {
     return stmt.run(names, phone, id).changes > 0;
   }
 
-  /**
-   * @param {string} id
-   * @returns {boolean}
-   */
+  /** @param {string} id */
   delete(id) {
     const stmt = this.db.prepare('DELETE FROM persons WHERE id=?');
     return stmt.run(id).changes > 0;

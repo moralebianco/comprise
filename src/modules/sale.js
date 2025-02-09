@@ -28,10 +28,7 @@ export class Sale {
     this.db = db;
   }
 
-  /**
-   * @param {Sale_} sale
-   * @returns {number}
-   */
+  /** @param {Sale_} sale */
   create({ checkoutId, customerId }) {
     const stmt = this.db.prepare(
       'INSERT INTO sales (checkout_id, customer_id) VALUES (?, ?) RETURNING id'
@@ -40,7 +37,6 @@ export class Sale {
     return stmt.get(checkoutId, customerId).id;
   }
 
-  /** @returns {Sale_[]} */
   findAll({ limit = 100, offset = 0 } = {}) {
     const stmt = this.db.prepare(
       'SELECT * FROM sales ORDER BY datetime LIMIT ? OFFSET ?'
@@ -48,10 +44,7 @@ export class Sale {
     return stmt.all(limit, offset).map((sale) => clone(sale, snakeToCamel));
   }
 
-  /**
-   * @param {number} id
-   * @returns {Sale_ | undefined}
-   */
+  /** @param {number} id */
   findOne(id, { items = false } = {}) {
     const stmt = this.db.prepare('SELECT * FROM sales WHERE id=?');
     const obj = clone(stmt.get(id), snakeToCamel);
@@ -61,10 +54,7 @@ export class Sale {
     return obj;
   }
 
-  /**
-   * @param {number} saleId
-   * @returns {Array<SaleItem>}
-   */
+  /** @param {number} saleId */
   getItems(saleId) {
     const stmt = this.db.prepare('SELECT * FROM sales_detail WHERE sale_id=?');
     return stmt.all(saleId).map((sale) => clone(sale, snakeToCamel));
@@ -86,10 +76,7 @@ export class Sale {
     );
   }
 
-  /**
-   * @param {number} id
-   * @returns {boolean}
-   */
+  /** @param {number} id */
   delete(id) {
     const stmt = this.db.prepare('DELETE FROM sales WHERE id=?');
     return stmt.run(id).changes > 0;
