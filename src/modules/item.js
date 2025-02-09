@@ -32,6 +32,17 @@ export class Item {
     return stmt.get(id ?? null, name, price, metadata, quantity).id;
   }
 
+  /** @param {string} q query */
+  search(q) {
+    // prettier-ignore
+    q = q.trim().split(/\s+/).map((t) => t + '*').join(' OR ');
+    const stmt = this.db.prepare(
+      'SELECT rowid AS id FROM items_fts(?) ORDER BY rank LIMIT 25'
+    );
+    // @ts-ignore
+    return stmt.all(q).map(({ id }) => this.findOne(id));
+  }
+
   /** @returns {Item_[]} */
   findAll({ limit = 100, offset = 0 } = {}) {
     const stmt = this.db.prepare('SELECT * FROM items LIMIT ? OFFSET ?');
@@ -87,7 +98,9 @@ export default express
     } else res.status(400).end();
   })
   .get('/', ({ query }, res) => {
-    if (isTypeOf(query, PAGE)) {
+    if (isTypeOf(query.q, '.')) {
+      res.send(service.search(query.q));
+    } else if (isTypeOf(query, PAGE)) {
       res.send(service.findAll(query));
     } else res.status(400).end();
   })

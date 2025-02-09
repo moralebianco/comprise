@@ -1,14 +1,14 @@
+// @ts-nocheck
 import { readFileSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 
-const database = new DatabaseSync(process.env.DB_NAME);
-
-database.exec(readFileSync('init.sql', 'utf8'));
-
-export function memory() {
-  const database = new DatabaseSync(':memory:');
-  database.exec(readFileSync('init.sql', 'utf8'));
-  return database;
+function make(location) {
+  const db = new DatabaseSync(location, { allowExtension: true });
+  db.loadExtension('./fts5.so');
+  db.exec(readFileSync('init.sql', 'utf8'));
+  return db;
 }
 
-export default database;
+export const memory = () => make(':memory:');
+
+export default make(process.env.DB_NAME);

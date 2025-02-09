@@ -1,4 +1,7 @@
+# SQLite
 proj.db
+fts5.so
+
 node_modules/
 .env*
 .vscode

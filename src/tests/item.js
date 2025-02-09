@@ -48,4 +48,12 @@ describe(import.meta.filename, () => {
 
   it('return undefined if id does not exist', () =>
     assert.equal(service.findOne(0), undefined));
+
+  it('return records that match query', () => {
+    [
+      { name: 'black milk', price: 2, metadata: 'red', quantity: 1 },
+      { name: 'red pill', price: 1, metadata: 'green', quantity: 2 },
+    ].forEach((t) => service.create(t));
+    assert.equal(service.search('re').length, 2);
+  });
 });

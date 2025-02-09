@@ -69,7 +69,35 @@ CREATE TABLE IF NOT EXISTS sales_detail(
 INSERT OR IGNORE INTO persons VALUES ('0', 'null', NULL);
 
 CREATE TRIGGER forbid_delete_persons_id_0
-BEFORE DELETE ON persons WHEN OLD.id = '0'
+  BEFORE DELETE ON persons WHEN OLD.id='0'
 BEGIN
   SELECT RAISE(FAIL, '');
+END;
+
+-- SQLite FTS5
+
+CREATE VIRTUAL TABLE IF NOT EXISTS items_fts
+USING fts5(name, metadata, content='items');
+
+CREATE TRIGGER IF NOT EXISTS insert_items_fts
+  AFTER INSERT ON items
+BEGIN
+  INSERT INTO items_fts (rowid, name, metadata)
+    VALUES (NEW.id, NEW.name, NEW.metadata);
+END;
+
+CREATE TRIGGER IF NOT EXISTS delete_items_fts
+  AFTER DELETE ON items
+BEGIN
+  INSERT INTO items_fts(items_fts, rowid, name, metadata)
+    VALUES ('delete', OLD.id, OLD.name, OLD.metadata);
+END;
+
+CREATE TRIGGER IF NOT EXISTS update_items_fts
+  AFTER UPDATE ON items
+BEGIN
+  INSERT INTO items_fts(items_fts, rowid, name, metadata)
+    VALUES ('delete', OLD.id, OLD.name, OLD.metadata);
+  INSERT INTO items_fts (rowid, name, metadata)
+    VALUES (NEW.id, NEW.name, NEW.metadata);
 END;
