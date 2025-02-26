@@ -11,15 +11,14 @@ app.use(
   })
 );
 
-readdirSync('./src/modules').forEach(async (f) => {
-  app.use(`/api/${f.slice(0, -3)}s`, (await import(`./modules/${f}`)).default);
-});
+await Promise.all(
+  readdirSync('./src/modules').map(async (f) =>
+    app.use(`/api/${f.slice(0, -3)}s`, (await import(`./modules/${f}`)).default)
+  )
+);
 
 app.get('/ping', (_, res) => {
   res.send('pong');
 });
 
-app.listen(process.env.APP_PORT, () => {
-  if (process.env.NODE_ENV === 'test')
-    readdirSync('./src/tests').map((f) => import(`./tests/${f}`));
-});
+export default app.listen(process.env.APP_PORT || 3000);

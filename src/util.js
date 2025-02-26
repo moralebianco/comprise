@@ -51,3 +51,24 @@ export function isTypeOf(obj, tpt) {
       throw new Error();
   }
 }
+
+/**
+ * @typedef {(path: string, body?: object, headers?: [string, string][]) => Promise<Response>} F
+ * @returns {Record<'get' | 'post' | 'patch' | 'put' | 'delete', F>}
+ */
+export function makeReq(server) {
+  const base = 'http://127.0.0.1:' + server.address().port;
+  // @ts-ignore
+  return Object.fromEntries(
+    ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'].map((method) => [
+      method.toLocaleLowerCase(),
+      function (path, body, headers = []) {
+        if (typeof body == 'object') {
+          body = JSON.stringify(body);
+          headers.push(['Content-type', 'application/json']);
+        }
+        return fetch(base + path, { headers, method, body });
+      },
+    ])
+  );
+}

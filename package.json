@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "install": "sh setup.sh",
+    "test": "node --experimental-sqlite --test --watch",
     "start": "node --experimental-sqlite --env-file=.env --watch src/index.js"
   },
   "keywords": [],
