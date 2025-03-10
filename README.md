@@ -11,6 +11,8 @@ Backend for inventory management system, designed for small and medium-sized sto
    cd comprise
    ```
 
+   > Check the [`ProcessEnv`](./src/types.d.ts) interface before setting the `.env` file!
+
 2. Build and run the Docker container
 
    ```bash
@@ -24,6 +26,7 @@ Backend for inventory management system, designed for small and medium-sized sto
 
 For detailed documentation, please refer to the `docs/` directory:
 
+- [Introduction](./docs/introduction.md)
 - [Architecture](./docs/architecture.md)
 
 ## License
